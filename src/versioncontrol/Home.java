@@ -6,12 +6,17 @@
 package versioncontrol;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
+import static versioncontrol.Login.conn;
+import static versioncontrol.Login.stmt;
+import static versioncontrol.VersionControl.JDBC_DRIVER;
+import static versioncontrol.VersionControl.conn;
 
 /**
  *
@@ -29,15 +34,25 @@ public class Home extends javax.swing.JFrame {
      */
     public Home() {
         initComponents();
+        this.loadData();
     }
 
-    public void loadData(){
+    public final void loadData(){
         
         String[] columnNames = {"Tipe", "Nominal", "Keterangan", "Tanggal"};
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
         try {
-            String sql = "SELECT * FROM transaction";
+            
+            Class.forName(JDBC_DRIVER);
+            
+            conn = DriverManager.getConnection(VersionControl.DB_URL, VersionControl.USER, VersionControl.PASS);
+            
+            stmt = conn.createStatement();
+            
+            String sql = "SELECT * FROM transaction";            
+            
             rs = stmt.executeQuery(sql);
+            
             while(rs.next()){
                 String type = rs.getString("TransactionType");
                 String nominal = rs.getString("Nominal");
@@ -46,12 +61,19 @@ public class Home extends javax.swing.JFrame {
                 
                 String[] data = {type, nominal, desc, time};
                 
+                
                 tableModel.addRow(data);
             }
             
+            
             jTable1.setModel(tableModel);
             
+            stmt.close();
+            conn.close();
+            
         } catch (SQLException ex) {
+            //Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
             Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -156,7 +178,6 @@ public class Home extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Home().setVisible(true);
-                new Home().loadData();
             }
         });
     }

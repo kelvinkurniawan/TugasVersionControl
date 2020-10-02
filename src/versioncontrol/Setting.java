@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import static versioncontrol.Login.conn;
 import static versioncontrol.TambahTransaksi.conn;
 import static versioncontrol.VersionControl.JDBC_DRIVER;
 
@@ -16,20 +17,63 @@ import static versioncontrol.VersionControl.JDBC_DRIVER;
  *
  * @author kelvi
  */
-public class Setting extends javax.swing.JFrame {
+public final class Setting extends javax.swing.JFrame {
     static Connection conn;
     static Statement stmt;
     static ResultSet rs;
+    static boolean saldoExist;
 
     /**
      * Creates new form Setting
+     * @param ID
      */
+    
+    public Setting(String ID) {
+        initComponents();
+        this.setID(ID);
+        checkSaldo();
+    }
+    
     public Setting() {
         initComponents();
+        checkSaldo();
     }
     
     public void setID(String ID){
         this.jLabel3.setText(ID);
+    }
+    
+    public void checkSaldo(){
+                try {
+            // register driver yang akan dipakai
+            Class.forName(JDBC_DRIVER);
+            
+            // buat koneksi ke database
+            conn = DriverManager.getConnection(VersionControl.DB_URL, VersionControl.USER, VersionControl.PASS);
+            
+            // buat objek statement
+            stmt = conn.createStatement();
+            
+            // buat query ke database
+            String sql = "SELECT * FROM balance where userId = '" + Integer.parseInt(jLabel3.getText()) + "'";
+            
+            // eksekusi query dan simpan hasilnya di obj ResultSet
+            rs = stmt.executeQuery(sql);
+            
+            // tampilkan hasil query
+            if(rs.next()){
+                this.jTextField1.setText(rs.getString("balance"));
+                saldoExist = true;
+            }else{
+                saldoExist = false;
+            }
+            
+            stmt.close();
+            conn.close();
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -120,10 +164,16 @@ public class Setting extends javax.swing.JFrame {
             stmt = conn.createStatement();
             
             // buat query ke database
-            String sql = "INSERT into balance(balance, userId) values ('"+ Integer.parseInt(jTextField1.getText()) +"', '"+Integer.parseInt(jLabel3.getText())+"')";
+            if(!saldoExist){
+                String sql = "INSERT into balance(balance, userId) values ('"+ Integer.parseInt(jTextField1.getText()) +"', '"+Integer.parseInt(jLabel3.getText())+"')";
+            stmt.execute(sql);
+            }else{
+                String sql = "UPDATE balance set balance = '"+Integer.parseInt(jTextField1.getText())+"' where userId = '"+Integer.parseInt(jLabel3.getText())+"'";
+            stmt.execute(sql);
+            }
+            
             
             // eksekusi query dan simpan hasilnya di obj ResultSet
-            stmt.execute(sql);
             
             Home home = new Home(this.jLabel3.getText());
             this.setVisible(false);

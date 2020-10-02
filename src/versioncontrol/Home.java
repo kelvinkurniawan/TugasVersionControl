@@ -5,12 +5,25 @@
  */
 package versioncontrol;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author kelvi
  */
-public class Home extends javax.swing.JFrame {
+    
+public class Home extends javax.swing.JFrame {    
 
+    static Connection conn;
+    static Statement stmt;
+    static ResultSet rs;
+    
     /**
      * Creates new form Home
      */
@@ -18,6 +31,30 @@ public class Home extends javax.swing.JFrame {
         initComponents();
     }
 
+    public void loadData(){
+        
+        String[] columnNames = {"Tipe", "Nominal", "Keterangan", "Tanggal"};
+        DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
+        try {
+            String sql = "SELECT * FROM transaction";
+            rs = stmt.executeQuery(sql);
+            while(rs.next()){
+                String type = rs.getString("TransactionType");
+                String nominal = rs.getString("Nominal");
+                String desc = rs.getString("Description");
+                String time = rs.getString("Time");
+                
+                String[] data = {type, nominal, desc, time};
+                
+                tableModel.addRow(data);
+            }
+            
+            jTable1.setModel(tableModel);
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -38,17 +75,6 @@ public class Home extends javax.swing.JFrame {
 
         jLabel1.setText("Buku Kas Digital");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
         jScrollPane1.setViewportView(jTable1);
 
         jLabel2.setText("Saldo Sekarang :");
@@ -130,9 +156,11 @@ public class Home extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Home().setVisible(true);
+                new Home().loadData();
             }
         });
     }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

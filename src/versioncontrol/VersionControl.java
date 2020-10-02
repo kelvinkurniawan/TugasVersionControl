@@ -56,6 +56,9 @@ public class VersionControl {
             }
             
             stmt.close();
+            /*
+            
+            */
             conn.close();
             
         } catch (Exception e) {

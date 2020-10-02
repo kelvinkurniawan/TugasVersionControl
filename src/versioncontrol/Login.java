@@ -5,11 +5,20 @@
  */
 package versioncontrol;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import static versioncontrol.VersionControl.JDBC_DRIVER;
+
 /**
  *
  * @author kelvi
  */
-public class Login extends javax.swing.JFrame {
+public class Login extends javax.swing.JFrame {    
+    static Connection conn;
+    static Statement stmt;
+    static ResultSet rs;
 
     /**
      * Creates new form Login
@@ -36,15 +45,20 @@ public class Login extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTextField1.setText("jTextField1");
+        jTextField1.setName("username"); // NOI18N
 
-        jTextField2.setText("jTextField2");
+        jTextField2.setName("password"); // NOI18N
 
         jLabel1.setText("Username");
 
         jLabel2.setText("Password");
 
         jButton1.setText("Login");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jLabel3.setText("Login");
 
@@ -59,8 +73,8 @@ public class Login extends javax.swing.JFrame {
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 252, Short.MAX_VALUE)
-                    .addComponent(jTextField2))
+                    .addComponent(jTextField1)
+                    .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 252, Short.MAX_VALUE))
                 .addGap(133, 133, 133))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -92,6 +106,46 @@ public class Login extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+                try {
+            // register driver yang akan dipakai
+            Class.forName(JDBC_DRIVER);
+            
+            // buat koneksi ke database
+            conn = DriverManager.getConnection(VersionControl.DB_URL, VersionControl.USER, VersionControl.PASS);
+            
+            // buat objek statement
+            stmt = conn.createStatement();
+            
+            // buat query ke database
+            String sql = "SELECT * FROM users where username = '" + jTextField1.getText() + "'";
+            
+            // eksekusi query dan simpan hasilnya di obj ResultSet
+            rs = stmt.executeQuery(sql);
+            
+            // tampilkan hasil query
+            if(rs.next()){
+                if(rs.getString("password").equals(jTextField2.getText())){
+                   Home home = new Home();
+                   this.setVisible(false);
+                   home.setVisible(true);
+                }
+            }else{
+                System.out.println("Salah");
+            }
+            
+            stmt.close();
+            /*
+            
+            */
+            conn.close();
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments

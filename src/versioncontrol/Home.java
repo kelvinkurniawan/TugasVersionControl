@@ -32,9 +32,19 @@ public class Home extends javax.swing.JFrame {
     /**
      * Creates new form Home
      */
+    
+    
     public Home() {
         initComponents();
         this.loadData();
+        this.getSaldo();
+    }
+    
+    public Home(String ID) {
+        initComponents();
+        this.setID(ID);
+        this.loadData();
+        this.getSaldo();
     }
 
     public void setID(String ID){
@@ -43,7 +53,56 @@ public class Home extends javax.swing.JFrame {
     
     
     public final void getSaldo(){
+        int saldoNow = 0, pengeluaran = 0, pemasukan = 0;
         
+        try {
+            // register driver yang akan dipakai
+            Class.forName(JDBC_DRIVER);
+            
+            // buat koneksi ke database
+            conn = DriverManager.getConnection(VersionControl.DB_URL, VersionControl.USER, VersionControl.PASS);
+            
+            // buat objek statement
+            stmt = conn.createStatement();
+            
+            // buat query ke database
+            String getSaldo = "SELECT * FROM balance where userId = '" + Integer.parseInt(jLabel4.getText()) + "'";
+            String getPemasukan = "SELECT * FROM transaction where uid = '" + Integer.parseInt(jLabel4.getText()) + "' and TransactionType = 'Pemasukan'";
+            String getPengeluaran = "SELECT * FROM transaction where uid = '" + Integer.parseInt(jLabel4.getText()) + "' and TransactionType = 'Pengeluaran'";
+
+            
+            // eksekusi query dan simpan hasilnya di obj ResultSet
+            rs = stmt.executeQuery(getSaldo);
+            
+            // tampilkan hasil query
+            if(rs.next()){
+                saldoNow = rs.getInt("balance");
+            }
+            
+            
+            rs = stmt.executeQuery(getPemasukan);
+            
+            // tampilkan hasil query
+            while(rs.next()){
+                pemasukan += rs.getInt("Nominal");
+            }
+            
+             rs = stmt.executeQuery(getPengeluaran);
+            
+            // tampilkan hasil query
+            while(rs.next()){
+                pengeluaran += rs.getInt("Nominal");
+            }
+            
+            stmt.close();
+            
+            conn.close();
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        jLabel3.setText(String.valueOf(saldoNow + pemasukan - pengeluaran));
     }
     
     public final void loadData(){

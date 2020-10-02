@@ -157,7 +157,7 @@ public class TambahTransaksi extends javax.swing.JFrame {
             // eksekusi query dan simpan hasilnya di obj ResultSet
             stmt.execute(sql);
             
-            Home home = new Home();
+            Home home = new Home(this.jLabel5.getText());
             this.setVisible(false);
             home.setVisible(true);
             home.setID(this.jLabel5.getText());

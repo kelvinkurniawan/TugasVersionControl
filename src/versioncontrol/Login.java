@@ -128,19 +128,16 @@ public class Login extends javax.swing.JFrame {
             // tampilkan hasil query
             if(rs.next()){
                 if(rs.getString("password").equals(jTextField2.getText())){
-                   Home home = new Home();
-                   this.setVisible(false);
-                   home.setVisible(true);
+                   Home home = new Home(rs.getString("UserId"));
                    home.setID(rs.getString("UserId"));
+                   home.setVisible(true);
+                   this.setVisible(false);
                 }
             }else{
                 System.out.println("Salah");
             }
             
             stmt.close();
-            /*
-            
-            */
             conn.close();
             
         } catch (Exception e) {

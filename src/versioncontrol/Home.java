@@ -48,6 +48,7 @@ public class Home extends javax.swing.JFrame {
         this.loadData();
         this.getSaldoAwal();
         this.getSaldo();
+        jLabel4.setVisible(false);
     }
 
     public void setID(String ID){

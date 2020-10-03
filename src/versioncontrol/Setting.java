@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import javax.swing.JOptionPane;
 import static versioncontrol.Login.conn;
 import static versioncontrol.TambahTransaksi.conn;
 import static versioncontrol.VersionControl.JDBC_DRIVER;
@@ -32,6 +33,7 @@ public final class Setting extends javax.swing.JFrame {
         initComponents();
         this.setID(ID);
         checkSaldo();
+        jLabel3.setVisible(false);
     }
     
     public Setting() {
@@ -85,6 +87,7 @@ public final class Setting extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jOptionPane1 = new javax.swing.JOptionPane();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
@@ -172,7 +175,7 @@ public final class Setting extends javax.swing.JFrame {
             stmt.execute(sql);
             }
             
-            
+            JOptionPane.showMessageDialog(this, "Berhasil disimpan");
             // eksekusi query dan simpan hasilnya di obj ResultSet
             
             Home home = new Home(this.jLabel3.getText());
@@ -231,6 +234,7 @@ public final class Setting extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JOptionPane jOptionPane1;
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 }

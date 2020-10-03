@@ -26,6 +26,7 @@ public class TambahTransaksi extends javax.swing.JFrame {
      */
     public TambahTransaksi() {
         initComponents();
+        jLabel5.setVisible(false);
     }
     
     public void setID(String ID){
@@ -40,6 +41,7 @@ public class TambahTransaksi extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jOptionPane1 = new javax.swing.JOptionPane();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -193,6 +195,7 @@ public class TambahTransaksi extends javax.swing.JFrame {
             // eksekusi query dan simpan hasilnya di obj ResultSet
             stmt.execute(sql);
             
+            jOptionPane1.showMessageDialog(this, "Berhasil ditambahkan");
             Home home = new Home(this.jLabel5.getText());
             this.setVisible(false);
             home.setVisible(true);
@@ -212,7 +215,7 @@ public class TambahTransaksi extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        Home home = new Home();
+        Home home = new Home(jLabel5.getText());
         home.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_jButton2ActionPerformed
@@ -261,6 +264,7 @@ public class TambahTransaksi extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JOptionPane jOptionPane1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;

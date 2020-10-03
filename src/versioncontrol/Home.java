@@ -207,6 +207,11 @@ public class Home extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Lucida Bright", 0, 18)); // NOI18N
         jLabel1.setText("Buku Kas Digital");
 
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
 
         jLabel2.setFont(new java.awt.Font("Lucida Bright", 0, 13)); // NOI18N
@@ -328,6 +333,10 @@ public class Home extends javax.swing.JFrame {
         setSaldo.setID(jLabel4.getText());
         setSaldo.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTable1MouseClicked
 
     /**
      * @param args the command line arguments
